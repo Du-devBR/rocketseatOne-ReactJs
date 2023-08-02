@@ -1,4 +1,5 @@
 import { Avatar } from '../avatar/Avatar'
+import { Comments } from '../comments/Comments'
 import style from './Post.module.css'
 
 export function Post(){
@@ -27,6 +28,7 @@ export function Post(){
         />
         <button type="submit">Publicar</button>
       </form>
+      <Comments />
     </article>
   )
 }
