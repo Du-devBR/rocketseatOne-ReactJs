@@ -1,8 +1,8 @@
-import './Avatar.modules.css'
+import style from  './Avatar.module.css'
 
 export function Avatar(props){
   return(
-    <div className='avatar'>
+    <div className={style.avatar}>
       <img src={props.src} alt="" />
     </div>
   )
