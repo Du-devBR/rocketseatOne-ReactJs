@@ -4,6 +4,8 @@ import { Comments } from '../comments/Comments'
 import style from './Post.module.css'
 
 export function Post({data}){
+  const [buttonVisible, setButtonVisible] = useState(false)
+  const [comments, setComments] = useState([])
   const [textComment, setTextComment] = useState(
     {
       id: 1,
@@ -15,8 +17,6 @@ export function Post({data}){
     }
   )
 
-  const [comments, setComments] = useState([])
-
   function hendleCommentPost(event){
     event.preventDefault()
     const newComment = {
@@ -26,6 +26,7 @@ export function Post({data}){
     }
     setComments([...comments, newComment])
     setTextComment({...textComment, message: ""})
+    setButtonVisible(false)
   }
 
 
@@ -33,10 +34,16 @@ export function Post({data}){
     const commentWithoutDelete = comments.filter(comment => {
       return comment !== commentDelete
     })
-
     setComments(commentWithoutDelete)
 
-    console.log(commentDelete)
+  }
+  console.log(buttonVisible)
+  function handleVisibilityButton(){
+    if(textComment.message.length >= 1){
+      setButtonVisible(true)
+    }else {
+      setButtonVisible(false)
+    }
 
   }
   return(
@@ -68,13 +75,18 @@ export function Post({data}){
         <textarea
           value={textComment.message}
           onChange={(event) => setTextComment({... textComment, message: event.target.value})}
+          onKeyUp={handleVisibilityButton}
           placeholder='Deixe seu comentario'
         />
-        <button
-          type="submit"
-          >
-            Publicar
-        </button>
+        {
+          buttonVisible ? (
+            <button
+              type="submit"
+              >
+                Publicar
+            </button>
+          ): ""
+        }
       </form>
       {
         comments.map((feedback) => (
