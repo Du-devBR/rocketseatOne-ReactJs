@@ -2,9 +2,15 @@ import { useState } from 'react'
 import { Avatar } from '../avatar/Avatar'
 import { Comments } from '../comments/Comments'
 import style from './Post.module.css'
+import ptBR, {} from 'date-fns/locale/pt-BR'
+import { formatDistanceToNow } from 'date-fns'
 
-export function Post({data}){
+export function Post({data, onPublished}){
   const [buttonVisible, setButtonVisible] = useState(false)
+  const publishedAtDateRelativeNow = formatDistanceToNow(onPublished, {
+    locale: ptBR,
+    addSuffix: true
+  })
   const [comments, setComments] = useState([])
   const [textComment, setTextComment] = useState(
     {
@@ -13,7 +19,7 @@ export function Post({data}){
       role: "Front-end Enginner",
       avatar: "https://avatars.githubusercontent.com/u/89052479?v=4",
       message: "",
-      publishedAt: "2023-08-03 12:00:00"
+      publishedAt: new Date()
     }
   )
 
@@ -22,7 +28,7 @@ export function Post({data}){
     const newComment = {
       ...textComment,
       id: comments.length + 1,
-      publishedAt: new Date().toISOString()
+      publishedAt: new Date()
     }
     setComments([...comments, newComment])
     setTextComment({...textComment, message: ""})
@@ -56,7 +62,7 @@ export function Post({data}){
             <span>{data.author.role}</span>
           </div>
         </div>
-        <span>{data.content.publishedAt}</span>
+        <span>{publishedAtDateRelativeNow}</span>
       </header>
       <div className={style['content-message']}>
         {

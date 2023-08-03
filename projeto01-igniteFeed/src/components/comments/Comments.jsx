@@ -2,11 +2,19 @@ import { useState } from 'react'
 import style from './Comments.module.css'
 import {BiLike, BiTrash} from 'react-icons/bi'
 import { dataUser } from '../../assets/db/dataUsers'
+import { formatDistanceToNow } from 'date-fns'
+import ptBR from 'date-fns/locale/pt-BR'
 
 export function Comments({data, onDelete}){
   const [like, setLike] = useState(0)
   const [colorLike, setColorLike] = useState(false)
   const {name} = dataUser[0].author
+  const {publishedAt} = data
+
+  const publishedAtDateCommentRelativeNow = formatDistanceToNow(publishedAt, {
+    locale: ptBR,
+    addSuffix: true
+  })
 
   function handleDeleteComment(){
     onDelete(data)
@@ -19,7 +27,7 @@ export function Comments({data, onDelete}){
     }
   }
 
-  console.log(colorLike)
+
 
   return(
     <div className={style['container-comment']}>
@@ -29,7 +37,7 @@ export function Comments({data, onDelete}){
           <div className={style.comment}>
             <div className={style.user}>
               <strong>{data.name}</strong>
-              <span>{data.publishedAt}</span>
+              <span>{publishedAtDateCommentRelativeNow}</span>
             </div>
             <p>{data.message}</p>
           </div>

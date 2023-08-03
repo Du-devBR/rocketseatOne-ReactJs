@@ -15,6 +15,7 @@ export function App() {
               <Post
                 key={userComment.id}
                 data={userComment}
+                onPublished={userComment.content.publishedAt}
               />
             ))
           }
