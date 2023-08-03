@@ -29,6 +29,7 @@ export function Post(){
         <button type="submit">Publicar</button>
       </form>
       <Comments />
+      <Comments />
     </article>
   )
 }
