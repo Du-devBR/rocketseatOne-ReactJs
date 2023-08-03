@@ -1,7 +1,9 @@
 import { Avatar } from '../avatar/Avatar'
 import style from './Sidebar.module.css'
+import { dataUser } from '../../assets/db/dataUsers'
 
 export function Sidebar(){
+  const {name, avatar, role } = dataUser[0].author
   return(
     <aside className={style.sidebar}>
       <img
@@ -10,10 +12,10 @@ export function Sidebar(){
         alt=""
       />
       <div className={style['user-profile']}>
-        <Avatar src="https://avatars.githubusercontent.com/u/89052479?v=4"/>
+        <Avatar src={avatar}/>
         <div className={style['user-info']}>
-          <strong>Eduardo Ananias</strong>
-          <span>Frontend Enginner </span>
+          <strong>{name}</strong>
+          <span>{role}</span>
         </div>
       </div>
       <footer className={style.footer}>

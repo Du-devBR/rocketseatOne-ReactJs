@@ -2,24 +2,30 @@ import { Avatar } from '../avatar/Avatar'
 import { Comments } from '../comments/Comments'
 import style from './Post.module.css'
 
-export function Post(){
+export function Post({data}){
   return(
     <article className={style['container-post']}>
       <header className={style['header-post']}>
         <div className={style['user-post']}>
-          <Avatar />
+          <Avatar src={data.author.avatar}/>
           <div className={style['info-user']}>
-            <strong>Jane Cooper</strong>
-            <span>Dev frontend</span>
+            <strong>{data.author.name}</strong>
+            <span>{data.author.role}</span>
           </div>
         </div>
-        <span>Publicado há 1h</span>
+        <span>{data.content.publishedAt}</span>
       </header>
       <div className={style['content-message']}>
-        <p>Lorem, ipsum.</p>
-        <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Aperiam perferendis culpa est. Ratione ut sint nihil sapiente autem rerum iure.</p>
-        <p><a href="#">👉 jane.design/doctorcare</a></p>
-        <p><a href="#">#novoprojeto #nlw #rocketseat</a></p>
+        {
+          data.content.comment.map((comment) => {
+            switch(comment.type){
+              case 'paragraph':
+                return <p>{comment.text}</p>
+              case 'link':
+                return <p><a href="#">{comment.text}</a></p>
+            }
+          })
+        }
       </div>
       <form className={style['container-form']}>
         <strong>Deixe seu feedback</strong>
@@ -28,8 +34,14 @@ export function Post(){
         />
         <button type="submit">Publicar</button>
       </form>
-      <Comments />
-      <Comments />
+      {
+        data.content.feedback.map((feedback) => (
+          <Comments
+            key={feedback.id}
+            data={feedback}
+          />
+        ))
+      }
     </article>
   )
 }
