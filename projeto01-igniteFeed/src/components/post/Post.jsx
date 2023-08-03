@@ -37,7 +37,7 @@ export function Post({data}){
     setComments(commentWithoutDelete)
 
   }
-  console.log(buttonVisible)
+
   function handleVisibilityButton(){
     if(textComment.message.length >= 1){
       setButtonVisible(true)
