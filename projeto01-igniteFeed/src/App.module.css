@@ -9,3 +9,10 @@
   align-items: flex-start;
 
 }
+
+
+@media (max-width: 778px){
+  .container{
+    grid-template-columns: 1fr;
+  }
+}
