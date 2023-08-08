@@ -5,10 +5,10 @@ export function App() {
 
   return (
     <>
-      <Button />
-      <Button />
-      <Button />
-      <Button />
+      <Button variant="primary" />
+      <Button variant="secundary" />
+      <Button variant="danger" />
+      <Button variant="success"/>
     </>
   )
 }
