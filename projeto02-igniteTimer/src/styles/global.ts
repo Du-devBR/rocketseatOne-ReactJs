@@ -5,11 +5,12 @@ export const GlobalStyle = createGlobalStyle`
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    list-style: none;
   }
 
 
   body {
-    background: ${props => props.theme['gray-700']};
+    background: ${props => props.theme['gray-900']};
   }
 
   body, input-security, textarea, button {
