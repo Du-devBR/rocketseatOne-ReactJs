@@ -1,11 +1,46 @@
 import { Play } from 'phosphor-react'
 import {  useForm } from 'react-hook-form'
+import {  zodResolver } from '@hookform/resolvers/zod'
+import * as zod from 'zod'
 import { CountdownContainer, FormContainer, HomeContainer, MinutesAmountInput, Separator, StartCountdownButton, TaskInput } from './styles'
 
+
+// interface INewCycleFormData {
+//   task: string;
+//   minutesAmount: number
+// }
+
+//Usando type ao inves de interface para integrar junto a o zod.infer
+
+type NewCycleFormData = zod.infer<typeof newCycleFormValidationSchema>
+
+const newCycleFormValidationSchema = zod.object({
+  task: zod.string().min(1, 'Informe a tarefa'),
+  minutesAmount: zod.number().min(5).max(60)
+})
+
 export function Home(){
+
+  const {register, handleSubmit, watch, formState, reset} = useForm<NewCycleFormData>({
+    resolver: zodResolver(newCycleFormValidationSchema),
+    defaultValues: {
+      task: '',
+      minutesAmount: 0
+    }
+  })
+  const task = watch('task')
+  const isSubmitDisabled = !task
+
+  function handleCreateNewCycle(data :NewCycleFormData){
+    console.log(data)
+    reset()
+  }
+
+  console.log(formState.errors)
+
   return(
     <HomeContainer>
-      <form action="">
+      <form action="" onSubmit={handleSubmit(handleCreateNewCycle)}>
         <FormContainer>
           <label htmlFor="task">Vou trabalhar em</label>
           <TaskInput
@@ -13,6 +48,7 @@ export function Home(){
             type="text"
             placeholder='Dê um nome para seu projeto'
             list='task-suggestion'
+            {...register('task')}
 
           />
           <datalist id='task-suggestion'>
@@ -27,8 +63,9 @@ export function Home(){
             id="minutesAmount"
             placeholder='00'
             step={5}
-            min={0}
-            max={60}
+            // min={0}
+            // max={60}
+            {...register('minutesAmount', {valueAsNumber: true})}
           />
           <span>minutos.</span>
         </FormContainer>
@@ -41,7 +78,7 @@ export function Home(){
         </CountdownContainer>
         <StartCountdownButton
           type="submit"
-          disabled={true}
+          disabled={isSubmitDisabled}
           >
             <Play size={24} /> Começar
         </StartCountdownButton>
