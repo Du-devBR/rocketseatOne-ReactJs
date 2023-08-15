@@ -3,6 +3,7 @@ import {  useForm } from 'react-hook-form'
 import {  zodResolver } from '@hookform/resolvers/zod'
 import * as zod from 'zod'
 import { CountdownContainer, FormContainer, HomeContainer, MinutesAmountInput, Separator, StartCountdownButton, TaskInput } from './styles'
+import { useState } from 'react'
 
 
 // interface INewCycleFormData {
@@ -19,7 +20,17 @@ const newCycleFormValidationSchema = zod.object({
   minutesAmount: zod.number().min(5).max(60)
 })
 
+interface ICycle {
+  id: string;
+  task: string;
+  minutesAmount: number;
+
+}
+
 export function Home(){
+
+  const [cycles, setCycles] = useState<ICycle[]>([])
+  const [activeCycleId, setActiveCycleId] = useState<string | null>(null)
 
   const {register, handleSubmit, watch, formState, reset} = useForm<NewCycleFormData>({
     resolver: zodResolver(newCycleFormValidationSchema),
@@ -32,11 +43,20 @@ export function Home(){
   const isSubmitDisabled = !task
 
   function handleCreateNewCycle(data :NewCycleFormData){
-    console.log(data)
+    const id = String(new Date().getTime())
+    const newCycle: ICycle = {
+      id: id,
+      task: data.task,
+      minutesAmount: data.minutesAmount
+    }
+    setCycles(state =>[...state, newCycle])
+    setActiveCycleId(id)
     reset()
   }
 
-  console.log(formState.errors)
+  const activeCycle = cycles.find(cycle => cycle.id === activeCycleId)
+
+  console.log(activeCycle)
 
   return(
     <HomeContainer>
