@@ -1,8 +1,10 @@
 import { stripe } from '@/lib/stripe';
 import { ImageContainer, ProductContainer, ProductDetails } from '@/styles/pages/products';
+import axios from 'axios';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
+import { useState } from 'react';
 import Stripe from 'stripe';
 
 interface ProductProps {
@@ -12,14 +14,30 @@ interface ProductProps {
     imageUrl: string;
     price: string;
     descripition: string;
+    defaultPriceId: string;
   };
 }
 
 export default function Product({ product }: ProductProps) {
+  const [disabledButton, setDisabledButton] = useState(false);
   const { isFallback } = useRouter();
-
   if (isFallback) {
     return <p>Loading....</p>;
+  }
+
+  async function handleBuyProduct() {
+    try {
+      setDisabledButton(true);
+      const response = await axios.post('/api/checkout', {
+        priceId: product.defaultPriceId,
+      });
+
+      const { checkoutUrl } = response.data;
+      window.location.href = checkoutUrl;
+    } catch (error) {
+      alert('Erro ao redirecionar para a pagina de checkout!');
+      setDisabledButton(false);
+    }
   }
   return (
     <ProductContainer>
@@ -30,7 +48,9 @@ export default function Product({ product }: ProductProps) {
         <h1>{product.name}</h1>
         <span>{product.price}</span>
         <p>{product.descripition}</p>
-        <button>Comprar agora</button>
+        <button disabled={disabledButton} onClick={handleBuyProduct}>
+          Comprar agora
+        </button>
       </ProductDetails>
     </ProductContainer>
   );
@@ -62,6 +82,7 @@ export const getStaticProps: GetStaticProps = async ({ params }: any) => {
           currency: 'BRL',
         }).format((price.unit_amount || 0) / 100),
         descripition: product.description,
+        defaultPriceId: price.id,
       },
     },
     revalidate: 60 * 60 * 1, //1 hora
